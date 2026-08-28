@@ -1,0 +1,38 @@
+{
+  "olx": {
+    "base_url": "https://www.olx.com.br/api/v2",
+    "categories": [
+      "cars",
+      "motorcycles",
+      "electronics"
+    ],
+    "location": "your_city",
+    "check_interval_minutes": 15
+  },
+  "notifications": {
+    "email": {
+      "enabled": false,
+      "smtp_server": "smtp.gmail.com",
+      "smtp_port": 587,
+      "sender_email": "your_email@gmail.com",
+      "sender_password": "your_app_password",
+      "recipient_email": "recipient@example.com"
+    },
+    "discord": {
+      "enabled": false,
+      "webhook_url": "https://discordapp.com/api/webhooks/your_webhook_url"
+    },
+    "slack": {
+      "enabled": false,
+      "webhook_url": "https://hooks.slack.com/services/your_webhook_url"
+    }
+  },
+  "database": {
+    "type": "sqlite",
+    "path": "olx_items.db"
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "logs/olx_monitor.log"
+  }
+}
