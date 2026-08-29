@@ -1,1 +1,4 @@
-"""Utilities module"""
+"""
+Moduł utils
+Zawiera funkcje pomocnicze
+"""

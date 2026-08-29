@@ -1,53 +1,37 @@
-#!/usr/bin/env python3
 """
-Logging utilities
+Konfiguracja loggingu
+Zapisuje logi do konsoli i pliku
 """
 
 import logging
-import logging.handlers
-from pathlib import Path
+from datetime import datetime
 
-def setup_logger(name, log_file='logs/olx_monitor.log', level=logging.INFO):
+def setup_logger(name):
     """
-    Setup logging configuration
+    Stwórz logger
     
     Args:
-        name: Logger name
-        log_file: Path to log file
-        level: Logging level
-        
+        name: nazwa loggera
+    
     Returns:
-        Configured logger instance
+        logger object
     """
-    # Create logs directory if it doesn't exist
-    log_dir = Path(log_file).parent
-    log_dir.mkdir(parents=True, exist_ok=True)
-    
     logger = logging.getLogger(name)
-    logger.setLevel(level)
+    logger.setLevel(logging.INFO)
     
-    # Console handler
+    # Format logów
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    
+    # Handler do konsoli
     console_handler = logging.StreamHandler()
-    console_handler.setLevel(level)
-    console_format = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
-    console_handler.setFormatter(console_format)
-    
-    # File handler with rotation
-    file_handler = logging.handlers.RotatingFileHandler(
-        log_file,
-        maxBytes=10485760,  # 10MB
-        backupCount=5
-    )
-    file_handler.setLevel(level)
-    file_format = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
-    file_handler.setFormatter(file_format)
-    
-    # Add handlers to logger
+    console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)
+    
+    # Handler do pliku
+    file_handler = logging.FileHandler('app.log')
+    file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     
     return logger
