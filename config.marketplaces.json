@@ -1,0 +1,38 @@
+{
+  "olx": {
+    "name": "OLX",
+    "base_url": "https://www.olx.pl",
+    "categories": [
+      { "key": "electronics", "label": "Elektronika", "path": "/elektronika/" },
+      { "key": "automotive", "label": "Motoryzacja", "path": "/motoryzacja/" },
+      { "key": "real_estate", "label": "Nieruchomości", "path": "/nieruchomosci/" }
+    ]
+  },
+  "allegro": {
+    "name": "Allegro",
+    "base_url": "https://allegro.pl",
+    "categories": [
+      { "key": "electronics", "label": "Elektronika", "path": "/kategoria/elektronika" },
+      { "key": "automotive", "label": "Motoryzacja", "path": "/kategoria/motoryzacja" },
+      { "key": "home", "label": "Dom i Ogród", "path": "/kategoria/dom-i-ogrod" }
+    ]
+  },
+  "otomoto": {
+    "name": "Otomoto",
+    "base_url": "https://www.otomoto.pl",
+    "categories": [
+      { "key": "cars", "label": "Samochody osobowe", "path": "/osobowe" },
+      { "key": "motorcycles", "label": "Motocykle", "path": "/motocykle-i-quady" },
+      { "key": "vans", "label": "Dostawcze", "path": "/dostawcze" }
+    ]
+  },
+  "otodom": {
+    "name": "Otodom",
+    "base_url": "https://www.otodom.pl",
+    "categories": [
+      { "key": "flats", "label": "Mieszkania", "path": "/pl/wyniki/sprzedaz/mieszkanie/cala-polska" },
+      { "key": "houses", "label": "Domy", "path": "/pl/wyniki/sprzedaz/dom/cala-polska" },
+      { "key": "plots", "label": "Działki", "path": "/pl/wyniki/sprzedaz/dzialka/cala-polska" }
+    ]
+  }
+}
