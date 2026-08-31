@@ -5,6 +5,7 @@ Database management module
 
 import logging
 from typing import List, Dict, Optional
+from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database.models import Base, OLXItem
@@ -127,11 +128,11 @@ class Database:
     def get_items_by_category(self, category: str, limit: int = 10) -> List[Dict]:
         """
         Get items by category
-        
+
         Args:
             category: Category to filter by
             limit: Maximum number of items to return
-            
+
         Returns:
             List of items in the category
         """
@@ -145,3 +146,57 @@ class Database:
         except Exception as e:
             logger.error(f"Error retrieving items by category: {str(e)}")
             return []
+
+    def get_filtered_items(self, category: str, q: str = None) -> List[Dict]:
+        """
+        Get non-expired items filtered by category and optional search query.
+
+        Args:
+            category: Category key to filter by
+            q: Optional search query to match against title or description
+
+        Returns:
+            List of matching, non-expired items
+        """
+        try:
+            session = self.Session()
+            now = datetime.utcnow()
+            query = session.query(OLXItem).filter(
+                OLXItem.category == category,
+                OLXItem.expires_at > now
+            )
+            if q:
+            query = query.filter(
+                    (OLXItem.title.ilike(f"%{q}%")) |
+                    (OLXItem.description.ilike(f"%{q}%"))
+                )
+            items = query.order_by(OLXItem.discovered_at.desc()).all()
+            session.close()
+            return [item.to_dict() for item in items]
+        except Exception as e:
+            logger.error(f"Error retrieving filtered items: {str(e)}")
+            return []
+
+    def delete_expired_items(self) -> int:
+        """
+        Delete listings that have passed their expiry time.
+
+        Returns:
+            Number of deleted items
+        """
+        session = None
+        try:
+            session = self.Session()
+            now = datetime.utcnow()
+            deleted = session.query(OLXItem).filter(OLXItem.expires_at <= now).delete()
+            session.commit()
+            logger.info(f"Cleanup: removed {deleted} expired listings")
+            return deleted
+        except Exception as e:
+            logger.error(f"Error deleting expired items: {str(e)}")
+            if session:
+                session.rollback()
+            return 0
+        finally:
+            if session:
+                session.close()

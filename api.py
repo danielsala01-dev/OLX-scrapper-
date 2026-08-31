@@ -26,6 +26,32 @@ def health_check():
     }), 200
 
 
+@app.route("/api/listings/filtered", methods=["GET"])
+def get_filtered_listings():
+    marketplace = request.args.get("marketplace", "").strip().lower()
+    category_key = request.args.get("category_key", "").strip()
+    q = request.args.get("q", "").strip() or None
+
+    if not marketplace or marketplace not in MARKETPLACES:
+        return jsonify({"error": "Invalid or missing marketplace"}), 400
+
+    valid_keys = [c["key"] for c in MARKETPLACES[marketplace]["categories"]]
+    if not category_key or category_key not in valid_keys:
+        return jsonify({"error": "Invalid or missing category_key"}), 400
+
+    from database.db import Database
+    try:
+        with open("config.json", "r", encoding="utf-8") as f:
+            db_config = json.load(f).get("database", {"type": "sqlite", "path": "olx_items.db"})
+    except (FileNotFoundError, KeyError):
+        db_config = {"type": "sqlite", "path": "olx_items.db"}
+
+    db = Database(db_config)
+    results = db.get_filtered_items(category=category_key, q=q)
+
+    return jsonify({"count": len(results), "results": results}), 200
+
+
 @app.route("/api/listings", methods=["GET"])
 def get_listings():
     return jsonify({
