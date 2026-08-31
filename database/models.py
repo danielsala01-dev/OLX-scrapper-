@@ -5,7 +5,7 @@ Database models for OLX items
 
 from sqlalchemy import Column, String, Float, DateTime, Boolean, Text
 from sqlalchemy.ext.declarative import declarative_base
-from datetime import datetime
+from datetime import datetime, timedelta
 
 Base = declarative_base()
 
@@ -25,9 +25,10 @@ class OLXItem(Base):
     seller_rating = Column(Float)
     url = Column(String)
     image_url = Column(String)
-    discovered_at = Column(DateTime, default=datetime.now)
+    discovered_at = Column(DateTime, default=datetime.utcnow)
+    expires_at = Column(DateTime, default=lambda: datetime.utcnow() + timedelta(hours=2))
     notification_sent = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
     
     def __repr__(self):
         return f"<OLXItem(id={self.id}, title={self.title}, category={self.category})>"
@@ -48,4 +49,5 @@ class OLXItem(Base):
             'url': self.url,
             'image_url': self.image_url,
             'discovered_at': self.discovered_at.isoformat() if self.discovered_at else None,
+            'expires_at': self.expires_at.isoformat() if self.expires_at else None,
         }
